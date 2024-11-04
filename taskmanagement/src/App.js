@@ -1,24 +1,23 @@
 import logo from './logo.svg';
 import './App.css';
+import HeaderSection from './HeaderSection';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import LoginPage from './LoginPage';
+import Tasks from './Tasks';
+import SignUp from './SignUp';
+// import MenuIcon from '@mui/icons-material/Menu';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <HeaderSection />
+      <Routes>
+        <Route path="/login" element={<LoginPage />} /> {/* Main/Home route */}
+        <Route path="/tasks" element={<Tasks />} /> {/* Tasks route */}
+        <Route path="/signUp" element={<SignUp />} /> {/* Tasks route */}
+
+      </Routes>
+    </Router>
   );
 }
 
