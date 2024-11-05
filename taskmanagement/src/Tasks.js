@@ -1,6 +1,7 @@
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, MenuItem, Paper, Select, TextField, Typography } from '@mui/material'
 import React, { useState } from 'react'
 import TaskItem from './TaskItem'
+import axios from 'axios';
 
 function Tasks() {
     const [taskDetail,setTaskDetail] = useState({
@@ -26,14 +27,37 @@ function Tasks() {
       const handleClose = () => {
         setOpen(false);
       };
-      const handleSave =()=>{
-    console.log("bbbbbb1",taskDetail);
-    setTaskDetail({
-        title:"",
-        description:""
-    })
-        handleClose()
-      }
+      const handleSave = async () => {
+
+        try {
+          // Send a POST request to /Tasks with taskDetail as data
+          const response = await axios.post('http://localhost:5000/addTask', taskDetail);
+    
+          // Handle response as needed
+          console.log('Task saved:', response.data);
+    
+          // Clear the form fields
+          setTaskDetail({
+            title: '',
+            description: ''
+          });
+    
+          handleClose(); // Call handleClose to close any dialog or modal if needed
+        } catch (error) {
+          console.error('Error saving task:', error);
+        }
+
+        try {
+          // Send a POST request to /Tasks with taskDetail as data
+          const tasks = await axios.get('http://localhost:5000/allTasks');
+          console.log("gfdhg",tasks);
+          
+        }catch(error){
+          console.error('Error getting task:', error);
+          
+        }
+    
+      };
   return (
     <div>
       <Button size='small' sx={{textTransform: "none",mt:"10px",ml:"5px",width:"10%"}} variant="contained" onClick={handleClickOpen}>Add Task</Button>
