@@ -1,17 +1,72 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
-import { TextField } from '@mui/material';
+import { IconButton, Snackbar, TextField } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 function LoginPage() {
+  const [open, setOpen] = useState(false);
+  const [validation,setValidation] = useState("")
+  const [login,setLogin]= useState({
+    email:"",
+    password:"",
+  })
+  const handleInput =(e)=>{
+    const { name, value } = e.target;
+    setLogin((prevState) => ({
+      ...prevState,
+      [name]: value
+    }));
+  }
     const navigate = useNavigate();
-    const handleClick = () => {
+    const handleClick = async() => {
+      const isAnyFieldEmpty = Object.values(login).some(value => value === "");
+      if(!isAnyFieldEmpty){
+      try {
+        const response = await axios.post(`http://localhost:5000/auth/login`,login);
+        if(response.status === 200){
         navigate('/tasks'); // This will redirect to the Tasks page
+
+        }
+      } catch (error) {
+        setValidation("Please enter valid Credential")
+      setOpen(true);
+
+      }
+    }else{
+      setOpen(true);
+    }
       };
       const handleSignUp =()=>{
         navigate('/signUp');
       }
+      const handleClose = (event, reason) => {
+        setValidation("")
+        if (reason === 'clickaway') {
+          return;
+        }
+    
+        setOpen(false);
+      };
+      
+      const action = (
+        <React.Fragment>
+          <Button color="secondary" size="small" onClick={handleClose}>
+            UNDO
+          </Button>
+          <IconButton
+            size="small"
+            aria-label="close"
+            color="inherit"
+            onClick={handleClose}
+          >
+            <CloseIcon fontSize="small" />
+          </IconButton>
+        </React.Fragment>
+      );
+      
     return (
         <Box sx={{ flexGrow: 1 }}>
           {/* <AppBar position="static">
@@ -33,22 +88,29 @@ function LoginPage() {
         "& .MuiOutlinedInput-root": {
           height: "40px", // Set the same height for consistency
         }
-      }} id="outlined-basic" label="Email" variant="outlined" />
+      }} id="outlined-basic" name="email" label="Email" variant="outlined" onChange={(e)=>{handleInput(e)}}/>
           <TextField sx={{
         mt: "10px",
         width: "100%",
         "& .MuiOutlinedInput-root": {
           height: "40px", // Set the same height for consistency
         },
-      }} id="outlined-basic" label="Email" variant="outlined" />
+      }} id="outlined-basic" name="password" label="Password" variant="outlined" onChange={(e)=>{handleInput(e)}}/>
           <Button onClick={handleClick} variant="contained" sx={{mt:"10px",width:"100%"}}>Login</Button>
           <Box sx={{ display: "flex", alignItems: "center" }}>
           <Typography>Don't have an account?</Typography>
           <Button onClick={handleSignUp} sx={{textTransform: "none"}}>Signup</Button>
         </Box>
-          <Button variant="contained" sx={{textTransform: "none"}}>Login with Google</Button>
+          {/* <Button variant="contained" sx={{textTransform: "none"}}>Login with Google</Button> */}
           </Box>
           </Box>
+          <Snackbar
+        open={open}
+        autoHideDuration={6000}
+        onClose={handleClose}
+        message={validation? validation : "No datas found"}
+        action={action}
+      />
         </Box>
       );
 }

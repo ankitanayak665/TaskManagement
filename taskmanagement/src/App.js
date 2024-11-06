@@ -5,9 +5,11 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import LoginPage from './LoginPage';
 import Tasks from './Tasks';
 import SignUp from './SignUp';
+
 // import MenuIcon from '@mui/icons-material/Menu';
 
 function App() {
+
   return (
     <Router>
       <HeaderSection />
@@ -18,6 +20,7 @@ function App() {
 
       </Routes>
     </Router>
+
   );
 }
 

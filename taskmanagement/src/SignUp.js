@@ -1,16 +1,79 @@
-import { Box, Button, TextField, Typography } from '@mui/material'
-import React from 'react'
+import { Box, Button, IconButton, TextField, Typography } from '@mui/material'
+import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
-
+import Snackbar from '@mui/material/Snackbar';
+import CloseIcon from '@mui/icons-material/Close';
+import axios from 'axios';
 function SignUp() {
+  const [open, setOpen] = useState(false);
+  const [validation,setValidation] = useState("")
+  const [credentials,setCredentials]= useState({
+    firstName:"",
+    lastName:"",
+    email:"",
+    password:"",
+    confirmPassword:""
+  })
     const navigate = useNavigate();
 
-   const handleSignUp =()=>{
-
+   const handleSignUp =async()=>{
+    // const hasMissingValues = (obj) => {
+    //   return Object.values(obj).some(value => value === undefined || value === null || value === '');
+    // };
+    const isAnyFieldEmpty = Object.values(credentials).some(value => value === "");
+    
+    if(!isAnyFieldEmpty){
+    try {
+      const response = await axios.post(`http://localhost:5000/auth/signUp`,credentials);
+      
+      if(response.status === 201){
+        navigate('/login');
+      }else{
+        
+      }
+    } catch (error) {
+      setValidation(error?.response?.data?.error?.details[0]?.message)
+      setOpen(true);
+    }
+  }else{
+    setOpen(true);
+  }
    }
    const handleLogin =()=>{
     navigate('/login');
    }
+   const handleInput =(e)=>{
+
+    const { name, value } = e.target;
+    setCredentials((prevState) => ({
+      ...prevState,
+      [name]: value
+    }));
+   }
+   const handleClose = (event, reason) => {
+    setValidation("")
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpen(false);
+  };
+   const action = (
+    <React.Fragment>
+      <Button color="secondary" size="small" onClick={handleClose}>
+        UNDO
+      </Button>
+      <IconButton
+        size="small"
+        aria-label="close"
+        color="inherit"
+        onClick={handleClose}
+      >
+        <CloseIcon fontSize="small" />
+      </IconButton>
+    </React.Fragment>
+  );
+   
   return (
     <Box sx={{ flexGrow: 1 }}>
           {/* <AppBar position="static">
@@ -33,43 +96,50 @@ function SignUp() {
         "& .MuiOutlinedInput-root": {
           height: "40px", // Set the same height for consistency
         }
-      }} id="outlined-basic" label="First Name" variant="outlined" />
+      }} id="outlined-basic" name="firstName" label="First Name" variant="outlined" onChange={(e)=>{handleInput(e)}} />
           <TextField sx={{
         mt: "10px",
         width: "100%",
         "& .MuiOutlinedInput-root": {
           height: "40px", // Set the same height for consistency
         },
-      }} id="outlined-basic" label="Last Name" variant="outlined" />
+      }} id="outlined-basic" name="lastName" label="Last Name" variant="outlined" onChange={(e)=>{handleInput(e)}}/>
       <TextField sx={{
         mt: "10px",
         width: "100%",
         "& .MuiOutlinedInput-root": {
           height: "40px", // Set the same height for consistency
         },
-      }} id="outlined-basic" label="Email" variant="outlined" />
+      }} id="outlined-basic" name="email" label="Email" variant="outlined" onChange={(e)=>{handleInput(e)}}/>
       <TextField sx={{
         mt: "10px",
         width: "100%",
         "& .MuiOutlinedInput-root": {
           height: "40px", // Set the same height for consistency
         },
-      }} id="outlined-basic" label="Password" variant="outlined" />
+      }} id="outlined-basic" name="password" label="Password" variant="outlined" onChange={(e)=>{handleInput(e)}}/>
       <TextField sx={{
         mt: "10px",
         width: "100%",
         "& .MuiOutlinedInput-root": {
           height: "40px", // Set the same height for consistency
         },
-      }} id="outlined-basic" label="Confirm Password" variant="outlined" />
+      }} id="outlined-basic" name="confirmPassword" label="Confirm Password" variant="outlined" onChange={(e)=>{handleInput(e)}}/>
           <Button onClick={handleSignUp} variant="contained" sx={{mt:"10px",width:"100%"}}>Signup</Button>
           <Box sx={{ display: "flex", alignItems: "center" }}>
           <Typography>Already have an account?</Typography>
           <Button sx={{textTransform: "none"}} onClick={handleLogin}>Login</Button>
         </Box>
-          <Button variant="contained" sx={{textTransform: "none"}}>Signup with Google</Button>
+          {/* <Button variant="contained" sx={{textTransform: "none"}}>Signup with Google</Button> */}
           </Box>
           </Box>
+          <Snackbar
+        open={open}
+        autoHideDuration={6000}
+        onClose={handleClose}
+        message={validation ? validation : "No datas found"}
+        action={action}
+      />
         </Box>
   )
 }
