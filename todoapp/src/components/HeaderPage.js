@@ -11,10 +11,15 @@ import LoginPage from './LoginPage';
 import { useNavigate } from 'react-router-dom';
 import { useLocation } from "react-router-dom";
 import LinearProgress from '@mui/material/LinearProgress';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { logOutUser } from '../redux/slices/TaskSlice';
 
 function HeaderSection() {
   const isloading = useSelector((state)=>state?.app?.isLoading)
+  const dispatch = useDispatch();
+  const userData = useSelector((state) => {
+      return state?.app?.loggedInUser
+    });
     const navigate = useNavigate();
     const handleLogin =()=>{
         navigate('/login');
@@ -22,6 +27,10 @@ function HeaderSection() {
     const handleSignUp =()=>{
         navigate('/signUp');
     }
+    const handleLogout =()=>{
+      dispatch(logOutUser({userData}))
+      navigate('/login');
+  }
     const location = useLocation();
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -30,8 +39,8 @@ function HeaderSection() {
               <IconButton ><EventNoteIcon /></IconButton>
               <div>
               <Button color="inherit" disabled={location.pathname !== "/login" && location.pathname !== "/"} sx={{ textTransform: "none",color:"blue" }} variant="contained" size="small" onClick={handleLogin}>Login</Button>
-    
               <Button color="inherit" disabled={location.pathname !== "/login" && location.pathname !== "/"} sx={{ textTransform: "none" }} onClick={handleSignUp}>Signup</Button>
+              <Button color="inherit" disabled={location.pathname !== "/tasks"} sx={{ textTransform: "none" }} onClick={handleLogout}>Logout</Button>
               </div>
             </Toolbar>
           </AppBar>

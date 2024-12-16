@@ -13,11 +13,14 @@ const ToDoList = () => {
   const listItems = useSelector((state) => {
     return state?.app?.todoTasks
   });
-  console.log("ghfhjf",listItems)
+  const userData = useSelector((state) => {
+    return state?.app?.loggedInUser
+  });
+  console.log("xhghjh",userData)
   const dispatch = useDispatch();
     useEffect(() => {
-        dispatch(updateList())
-    },[]);
+        dispatch(updateList({userData}))
+    },[userData]);
     // useEffect(()=>{
     // setTaskList(listItems)
     // },[listItems])
@@ -29,27 +32,26 @@ const ToDoList = () => {
     const handleAdd = () =>{
         setTask(" ")
         // setTaskList()
-        const addItemList = [...listItems,{text:task}]
-        console.log("xhgdhg",addItemList)
-        dispatch(addItems(addItemList))
-        dispatch(updateList())
+        let addItemList = [...listItems,{text:task}]
+        dispatch(addItems({addItemList,userData}))
+        dispatch(updateList({userData}))
         // localStorage.setItem("listItems", JSON.stringify([...taskList,task]));
         // dispatch(updateList(JSON.stringify([...taskList,task])))
     }
     const handleDelete = (index) =>{
-        const newList = [...listItems];
-        newList.splice(index,1)
-        dispatch(addItems(newList))
-        dispatch(updateList())
+        let addItemList = [...listItems];
+        addItemList.splice(index,1)
+        dispatch(addItems({addItemList,userData}))
+        dispatch(updateList({userData}))
     }
     
     const handleComplete = (index) => {
-        const updatedList = listItems.map((item, i) =>
+        let addItemList = listItems.map((item, i) =>
           i === index ?{ ...item, completed: true } : item
         );
-        console.log("gfhgfj",updatedList)
-        dispatch(addItems(updatedList));
-        dispatch(updateList());
+        console.log("gfhgfj",addItemList)
+        dispatch(addItems({addItemList,userData}));
+        dispatch(updateList({userData}));
       };
       const handleEdit = (index) => {
         setEditIndex(index); // Set the index being edited
@@ -58,11 +60,11 @@ const ToDoList = () => {
     
       const handleSave = () => {
         if (task.trim() === "") return; // Avoid saving empty tasks
-        const updatedList = listItems.map((item, i) =>
+        let addItemList = listItems.map((item, i) =>
           i === editIndex ? { ...item, text: task } : item
         );
-        dispatch(addItems(updatedList));
-        dispatch(updateList());
+        dispatch(addItems({addItemList,userData}));
+        dispatch(updateList({userData}));
         setTask(""); // Clear the input field
         setEditIndex(null); // Exit edit mode
       };

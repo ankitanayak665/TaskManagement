@@ -9,7 +9,7 @@ import LinearProgress from '@mui/material/LinearProgress';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
-import { isLogin } from '../redux/slices/TaskSlice';
+import { isLogin, loggedInUser } from '../redux/slices/TaskSlice';
 // import { loginUser } from './Redux/Action/taskAction';
 function LoginPage() {
   const [open, setOpen] = useState(false);
@@ -41,7 +41,11 @@ function LoginPage() {
         const  isValidUser = totalUserList.some(user => user.email === login.email && user.password === login.password);
         console.log("fdsg",isValidUser,login,totalUserList)
         if(isValidUser){
+          dispatch(loggedInUser(login))
           navigate('/tasks');
+        }else{
+          setValidation("Please enter valid Credential")
+          setOpen(true);
         }
         // dispatch(loginUser(login)).then((res)=>{
         //   if(res?.meta?.requestStatus === "fulfilled"){
