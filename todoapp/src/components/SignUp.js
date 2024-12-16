@@ -20,7 +20,6 @@ function SignUp() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
   const totalUserList = useSelector((state)=>state?.app?.getusersList)
-  console.log("gffhgf",totalUserList)
     useEffect(()=>{
       dispatch((isLogin()))
     },[])
@@ -31,21 +30,14 @@ function SignUp() {
    const handleSignUp =async()=>{
     const value =[...credentialsList,credentials]
     setCredentialsList(value)
-    console.log("fdhgfh",value)
-    // const hasMissingValues = (obj) => {
-    //   return Object.values(obj).some(value => value === undefined || value === null || value === '');
-    // };
+   
     const isAnyFieldEmpty = Object.values(credentials).some(value => value === "");
     
     if(!isAnyFieldEmpty){
     try {
-      // const response = await axios.post(`https://managetodo-backend.onrender.com/auth/signUp`,credentials);
       dispatch(isSignUp(value))
-      // if(response.status === 201){
         navigate('/login');
-      // }else{
         
-      // }
     } catch (error) {
       setValidation(error?.response?.data?.error?.details[0]?.message)
       setOpen(true);
@@ -61,7 +53,6 @@ function SignUp() {
 
     const { name, value } = e.target;
     setCredentials((prevState) => {
-      console.log("Previous State:", prevState);
       return {
         ...prevState,
         [name]: value
@@ -96,7 +87,7 @@ function SignUp() {
     <Box sx={{ flexGrow: 1 }}>
          
           <Box sx={{display:"flex",justifyContent:"center",flexDirection:"column" ,alignItems: "center",}}>
-          <Typography sx={{ display:"flex",justifyContent:"center",mt:"5vh", fontWeight:"10px"}}>Signup</Typography>
+          <Typography sx={{ display:"flex",justifyContent:"center",mt:"5vh", fontWeight:"bold"}}>Signup</Typography>
           <Box sx={{p:"10px",display:"flex",justifyContent:"center",flexDirection:"column" ,border: "1px solid",borderColor:"blue", width:"40%",alignItems: "center"}}>
           <TextField
            sx={{

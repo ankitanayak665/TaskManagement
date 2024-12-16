@@ -5,7 +5,7 @@ const initialState = {
     signUpDatas:[],
     getusersList:[],
     loggedInUser:{},
-    isLoading: false, // Added default value for `isLoading`
+    isLoading: false, 
     message:""
 };
 const getAllTodotasks = createSlice({
@@ -14,7 +14,6 @@ const getAllTodotasks = createSlice({
     reducers: {
         updateList: (state,{payload}) => {
             const totalList = localStorage.getItem(`tasks_${payload.userData.email}`);
-          console.log("fdxghghj",payload,totalList)
 
             if (totalList) {
             state.todoTasks = JSON.parse(totalList);
@@ -24,14 +23,12 @@ const getAllTodotasks = createSlice({
             }
           },
           addItems: (state, { payload }) => {
-            console.log("fgchg",payload)
             state.setTodoTasks = payload.addItemList
             localStorage.setItem(`tasks_${payload.userData.email}`, JSON.stringify(payload.addItemList));
           },
           isSignUp: (state, { payload }) => {
             state.signUpDatas = payload
             localStorage.setItem("usersList", JSON.stringify(payload));
-            console.log("fgdhgf",payload)
           },
           isLogin: (state, { payload }) => {
             const userList = localStorage.getItem("usersList");
@@ -40,11 +37,9 @@ const getAllTodotasks = createSlice({
             }
           },
           loggedInUser: (state, { payload }) => {
-            console.log("chjhj",payload)
             state.loggedInUser = payload
           },
           logOutUser: (state, { payload }) => {
-            console.log("chjhjj",payload)
             localStorage.removeItem(`tasks_${payload.userData.email}`);
 
           },

@@ -10,7 +10,6 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import { isLogin, loggedInUser } from '../redux/slices/TaskSlice';
-// import { loginUser } from './Redux/Action/taskAction';
 function LoginPage() {
   const [open, setOpen] = useState(false);
   const [validation,setValidation] = useState("")
@@ -24,7 +23,6 @@ function LoginPage() {
     dispatch(isLogin())
   },[])
   const validUser = useSelector((state)=>state)
-  console.log("gfhgf",validUser)
   const handleInput =(e)=>{
     const { name, value } = e.target;
     setLogin((prevState) => ({
@@ -39,7 +37,6 @@ function LoginPage() {
         setLoading(true)
       try {
         const  isValidUser = totalUserList.some(user => user.email === login.email && user.password === login.password);
-        console.log("fdsg",isValidUser,login,totalUserList)
         if(isValidUser){
           dispatch(loggedInUser(login))
           navigate('/tasks');
@@ -47,12 +44,6 @@ function LoginPage() {
           setValidation("Please enter valid Credential")
           setOpen(true);
         }
-        // dispatch(loginUser(login)).then((res)=>{
-        //   if(res?.meta?.requestStatus === "fulfilled"){
-        //     navigate('/tasks');
-        //   }
-        // })
-        // dispatch(isLogin())
 
       } catch (error) {
         setValidation("Please enter valid Credential")
@@ -93,26 +84,24 @@ function LoginPage() {
       
       const [loading, setLoading] = React.useState(false);
 
-      // const handleToggleLoading = () => {
-      //   setLoading((prev) => !prev); // Toggle loading state
-      // };
+      
     return (
         <Box sx={{ flexGrow: 1 }}>
           <Box sx={{display:"flex",justifyContent:"center",flexDirection:"column" ,alignItems: "center",}}>
-          <Typography sx={{ display:"flex",justifyContent:"center",mt:"5vh", fontWeight:"10px"}}>Login</Typography>
+          <Typography sx={{ display:"flex",justifyContent:"center",mt:"5vh", fontWeight:"bold"}}>Login</Typography>
           <Box sx={{p:"10px",display:"flex",justifyContent:"center",flexDirection:"column" ,border: "1px solid",borderColor:"blue", width:"40%",alignItems: "center"}}>
           <TextField sx={{
         mt: "10px",
         width: "100%",
         "& .MuiOutlinedInput-root": {
-          height: "40px", // Set the same height for consistency
+          height: "40px", 
         }
       }} id="outlined-basic" name="email" label="Email" variant="outlined" onChange={(e)=>{handleInput(e)}}/>
           <TextField sx={{
         mt: "10px",
         width: "100%",
         "& .MuiOutlinedInput-root": {
-          height: "40px", // Set the same height for consistency
+          height: "40px", 
         },
       }} id="outlined-basic" name="password" label="Password" variant="outlined" onChange={(e)=>{handleInput(e)}}/>
           <Button onClick={handleClick} variant="contained" sx={{mt:"10px",width:"100%"}}>Login</Button>
@@ -120,7 +109,6 @@ function LoginPage() {
           <Typography>Don't have an account?</Typography>
           <Button onClick={handleSignUp} sx={{textTransform: "none"}}>Signup</Button>
         </Box>
-          {/* <Button variant="contained" sx={{textTransform: "none"}}>Login with Google</Button> */}
           </Box>
           </Box>
           

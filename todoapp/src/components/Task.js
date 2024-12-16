@@ -3,40 +3,32 @@ import { useState } from 'react';
 import Box from '@mui/material/Box';
 import { useSelector, useDispatch } from "react-redux";
 import Button from '@material-ui/core/Button';
-import { TextField } from '@mui/material';
+import { TextField, Typography } from '@mui/material';
 import { addItems, updateList } from '../redux/slices/TaskSlice';
 
 const ToDoList = () => {
   const [task, setTask] = useState("");
   const [editIndex, setEditIndex] = useState(null);
-//   const [taskList, setTaskList] = useState([]);
   const listItems = useSelector((state) => {
     return state?.app?.todoTasks
   });
   const userData = useSelector((state) => {
     return state?.app?.loggedInUser
   });
-  console.log("xhghjh",userData)
   const dispatch = useDispatch();
     useEffect(() => {
         dispatch(updateList({userData}))
     },[userData]);
-    // useEffect(()=>{
-    // setTaskList(listItems)
-    // },[listItems])
-
+    
     const handleOnChange = (e) =>{
-        console.log("jhgdjh",e.target.value)
         setTask(e.target.value)
     }
     const handleAdd = () =>{
         setTask(" ")
-        // setTaskList()
         let addItemList = [...listItems,{text:task}]
         dispatch(addItems({addItemList,userData}))
         dispatch(updateList({userData}))
-        // localStorage.setItem("listItems", JSON.stringify([...taskList,task]));
-        // dispatch(updateList(JSON.stringify([...taskList,task])))
+       
     }
     const handleDelete = (index) =>{
         let addItemList = [...listItems];
@@ -49,53 +41,58 @@ const ToDoList = () => {
         let addItemList = listItems.map((item, i) =>
           i === index ?{ ...item, completed: true } : item
         );
-        console.log("gfhgfj",addItemList)
         dispatch(addItems({addItemList,userData}));
         dispatch(updateList({userData}));
       };
       const handleEdit = (index) => {
-        setEditIndex(index); // Set the index being edited
-        setTask(listItems[index]?.text || ""); // Populate the selected task's text in the input field
+        setEditIndex(index); 
+        setTask(listItems[index]?.text || ""); 
       };
     
       const handleSave = () => {
-        if (task.trim() === "") return; // Avoid saving empty tasks
+        if (task.trim() === "") return; 
         let addItemList = listItems.map((item, i) =>
           i === editIndex ? { ...item, text: task } : item
         );
         dispatch(addItems({addItemList,userData}));
         dispatch(updateList({userData}));
-        setTask(""); // Clear the input field
-        setEditIndex(null); // Exit edit mode
+        setTask(""); 
+        setEditIndex(null); 
       };
     return(
         <>
         <Box>
-        Todo List
+          <Typography sx={{ fontSize: '24px', fontWeight: 'bold' }}>Todo List</Typography>
+        
         </Box>
         <Box>
-            <TextField value={task} onChange={(e)=>{handleOnChange(e)}}>
+            <TextField value={task} sx={{width:"30%"}} onChange={(e)=>{handleOnChange(e)}}>
             </TextField>
             {editIndex !== null ? (
-          <Button onClick={handleSave}>Save</Button>
+          <Button onClick={handleSave} style={{backgroundColor:"blue",marginLeft:"5px",marginTop:"5px",color:"white"}}>Save</Button>
         ) : (
-          <Button onClick={handleAdd}>Add</Button>
+          <Button onClick={handleAdd} style={{backgroundColor:"blue",marginLeft:"5px",marginTop:"5px",color:"white"}}>Add</Button>
         )}
         </Box>
         {listItems.map((item,index)=>(
-            <Box display={'flex'}>
+            <Box display={'flex'}  alignItems={'center'} sx={{mt:"0.5%"}}>
             <Box sx={{
               textDecoration: item.completed ? "line-through" : "none",
               flexGrow: 1,
+              backgroundColor:"lightblue",
+              border:"0.5px solid grey",
+              alignItems:"center",
+              padding:"5px",
+              
             }}>
-              {item?.text}
+              <Typography style={{fontSize:"14px"}}>{item?.text}</Typography>
             </Box>
             <Box>
-            <Button disabled={item.completed} onClick={() => handleComplete(index)}>
+            <Button style={{backgroundColor:"blue",marginLeft:"5px",marginTop:"5px",color:"white"}} disabled={item.completed} onClick={() => handleComplete(index)}>
               Complete
             </Button>
-            <Button onClick={()=>{handleDelete(index)}}>Delete</Button>
-            <Button onClick={()=>{handleEdit(index)}}>Edit</Button>
+            <Button style={{backgroundColor:"blue",marginLeft:"5px",marginTop:"5px",color:"white"}} onClick={()=>{handleDelete(index)}}>Delete</Button>
+            <Button style={{backgroundColor:"blue",marginLeft:"5px",marginTop:"5px",color:"white"}} onClick={()=>{handleEdit(index)}}>Edit</Button>
             </Box>
             </Box>
     ))}
